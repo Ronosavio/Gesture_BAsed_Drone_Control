@@ -1,0 +1,39 @@
+# Python bytecode and test/tool caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+myvenv/
+
+# IDE and editor state
+.vscode/
+.idea/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Generated artifacts and model outputs
+/artifacts/
+/generated/
+/models/generated/
+
+# OS metadata
+.DS_Store
+Thumbs.db

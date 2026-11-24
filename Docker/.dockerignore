@@ -1,0 +1,5 @@
+**
+!Dockerfile
+!requirements.txt
+!gesture_protocol.py
+!gesture_server.py
