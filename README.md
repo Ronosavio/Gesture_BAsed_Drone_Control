@@ -5,11 +5,11 @@ The webcam and display run on Windows; the Docker service processes camera
 frames with MediaPipe and publishes confirmed gesture events over TCP. The
 Windows controller subscribes to those events and uses `djitellopy`.
 
-> **Safety status:** this project is not flight-ready. The Windows controller
-> has `DRY_RUN = True` and `FLIGHT_COMMANDS_ENABLED = False`; its flight methods
-> only print the commands they would send. The legacy flight experiment has
-> `DRY_RUN = False` and can issue real flight commands if run. Do not run that
-> experiment with a powered drone.
+> **Safety status:** the Windows controller has been operated with a real Tello
+> and is in live-flight mode (`DRY_RUN = False` and
+> `FLIGHT_COMMANDS_ENABLED = True`). It sends takeoff, landing, movement and
+> rotation commands during normal operation. Treat every gesture confirmation
+> as a real flight command and keep clear space around the aircraft.
 
 ## Features
 
@@ -22,6 +22,7 @@ Windows controller subscribes to those events and uses `djitellopy`.
   event rejection.
 - Controller-side battery, temperature, takeoff retry, settling, movement
   cooldown and repeated-gesture protections.
+- Real DJI Tello takeoff, landing, movement and rotation command support.
 - No automatic reconnect or landing command when the gesture server
   disconnects.
 
@@ -98,9 +99,8 @@ prototype.
 - Windows with a webcam available as OpenCV camera index `0`.
 - Docker Desktop running Linux containers.
 - Python installed on Windows (`py` launcher).
-- A Tello and `djitellopy` are required for the controller to connect. The
-  controller attempts a Tello connection, but this prototype does not send
-  flight commands.
+- A Tello and `djitellopy` are required for the controller to connect and send
+  real flight commands.
 
 ## Installation and startup
 
@@ -145,8 +145,9 @@ py .\drone_controller.py
 
 The controller defaults to `127.0.0.1:5000`. It exits if the subscription is
 rejected or the connection drops; it does not reconnect automatically. Press
-**Ctrl+C** to stop it. In this development configuration, takeoff, landing,
-movement, rotation and shutdown landing commands are not sent.
+**Ctrl+C** to stop it. With the current live-flight settings, confirmed
+gestures can send takeoff, landing, movement and rotation commands to the
+Tello.
 
 ## Gesture stability
 
@@ -173,9 +174,9 @@ every gesture, Tello connectivity, or flight.
 
 ## Safety and limitations
 
-- Keep `DRY_RUN = True` and `FLIGHT_COMMANDS_ENABLED = False` in
-  `drone_controller.py`. Do not change these settings without a separate safety
-  review and explicit authorization.
+- `drone_controller.py` is in live-flight mode: `DRY_RUN = False` and
+  `FLIGHT_COMMANDS_ENABLED = True`. Only run the controller with a confirmed
+  Tello connection and a clear, controlled flight area.
 - The legacy `experiments/Learn_Gesture_fly_drone.py` has `DRY_RUN = False`.
   It is not integrated into the Docker workflow and may send real commands.
 - A gesture-server or TCP disconnect does **not** make this program send a
@@ -184,15 +185,16 @@ every gesture, Tello connectivity, or flight.
   assumed behavior after a lost control link.
 - The unauthenticated TCP service is intended for local development. Do not
   expose port 5000 to untrusted networks.
-- Camera access, lighting, gesture recognition accuracy, timing and actual
-  drone behavior have not been validated as a complete flight system.
+- The Windows controller and end-to-end gesture server flow have been operated
+  with a physical Tello. Camera lighting, recognition accuracy and complete
+  flight safety still require careful supervised testing.
 
 For the detailed controller notes, see [CONTROLLER.md](CONTROLLER.md).
 
 ## Development status and next steps
 
-The hybrid transport, server event flow and dry-run controller are implemented.
-Unit tests and a Docker build are available, but no real Tello flight or
-full hardware acceptance test has been performed. Possible next steps include
-landmark-driven classifier tests, authenticated transport, configurable
-settings, structured logging and a supervised hardware test plan.
+The hybrid transport, server event flow and live Tello controller are
+implemented. The controller has been tested with a real Tello, and unit tests
+plus a Docker build are available. Possible next steps include landmark-driven
+classifier tests, authenticated transport, configurable settings, structured
+logging and an expanded supervised hardware acceptance test plan.

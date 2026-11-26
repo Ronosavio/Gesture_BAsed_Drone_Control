@@ -9,13 +9,13 @@ are sent only when a new held gesture is confirmed. A new controller receives
 the server's current sequence in its subscription acknowledgement and does not
 replay prior gestures.
 
-## Initial testing mode
+## Live-flight mode
 
-`DRY_RUN` is `True` and `FLIGHT_COMMANDS_ENABLED` is `False` in
-`drone_controller.py`. The controller connects to the Tello to read status, but
-takeoff, land, movement, rotation, and shutdown landing calls are not sent.
-Do not treat successful tests as flight-readiness; real-world testing,
-independent failsafe planning, and explicit code review are still required.
+The Windows-side controller has been operated successfully with a real Tello.
+`DRY_RUN` is `False` and `FLIGHT_COMMANDS_ENABLED` is `True` in
+`drone_controller.py`, so confirmed gestures send takeoff, landing, movement,
+rotation, and shutdown landing commands where applicable. Keep the aircraft in
+clear space and remain ready to land it manually.
 
 ## Run
 
